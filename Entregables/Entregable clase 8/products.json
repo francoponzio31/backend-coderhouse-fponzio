@@ -1,0 +1,35 @@
+[
+    {
+        "title": "product 1",
+        "description": "description modified",
+        "code": "1",
+        "price": 10,
+        "status": true,
+        "stock": 50,
+        "category": "category 1",
+        "thumbnails": [],
+        "id": 0
+    },
+    {
+        "title": "1",
+        "description": "1",
+        "code": "1",
+        "price": "1",
+        "status": true,
+        "stock": "1",
+        "category": "1",
+        "thumbnails": [],
+        "id": 1
+    },
+    {
+        "title": "1",
+        "description": "1",
+        "code": "1",
+        "price": "1",
+        "status": true,
+        "stock": "1",
+        "category": "1",
+        "thumbnails": [],
+        "id": 3
+    }
+]

@@ -1,0 +1,20 @@
+
+<h3>New message</h3>
+<form id="new-message-form">
+  <input type="text" id="user-email-input" disabled required >
+  <input type="text" id="message-input" required >
+  <button id="send-message-btn">Send</button>
+</form>
+
+
+<h3>Chat messages</h3>
+<ul id="messages-container" style="border:1px solid black">
+    {{#each messages}}
+    <li>
+        <span> <b>{{this.user}}:</b> {{this.message}} </span>
+    </li>
+  {{/each}}
+</ul>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/chat.js"></script>
