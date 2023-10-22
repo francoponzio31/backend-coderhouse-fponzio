@@ -1,32 +1,52 @@
-import {Router} from "express"
-import { ProductsManager } from "../manager/products.manager.js"
+import { Router } from "express"
+import { ProductsManager } from "../dao/manager/products.manager.js"
+import { Types } from "mongoose"
 
 
 const router = Router()
 
 router.get("/", async (req, res)=>{
     try {
-        const limit = parseInt(req.query.limit)  // query params
 
-        const products = await ProductsManager.getProducts()
-        let filteredProducts = [...products]
-        if (!products.length){
-            res.status(200).json({products: products, message: "no products found"})
-        }
-        else {
-            if (!isNaN(limit)){
-                filteredProducts = filteredProducts.slice(0, limit)
-            }
-            res.status(200).json({products: filteredProducts, message: "products found"})
-        }
+        const params = req.query
+        const page  = parseInt(params.page) || 1
+        const limit = parseInt(params.limit) || 10
+        const sort  = params.sort === "asc" ? {"price":1} : params.sort === "desc" ? {"price":-1} : {}
+        const query  = {}
+        if (params.category) query.category = params.category;
+        if (params.stock) query.stock = params.stock;
+
+        const url = `${req.protocol}://${req.get('host')}${req.baseUrl}`
+
+        const response = await ProductsManager.getProducts(page, limit, sort, query)
+
+        res.status(200).json({
+            status:"success",
+            totalPages: response.pages,
+            totalProducts: response.count,
+            resultsAmount: response.results.length,
+            hasPrevPage: response.hasPrevPage,
+            hasNextPage: response.hasNextPage,
+            prevPage: response.hasPrevPage ? page-1 : null,
+            nextPage: response.hasNextPage ? page+1 : null,
+            page: page,
+            prevLink: response.hasPrevPage ? 
+                `${url}?page=${page-1}` + `${limit ? `&limit=${limit}`:""}` + `${params.sort ? `&sort=${params.sort}`:""}` + `${params.category ? `&category=${params.category}`:""}` + `${params.stock ? `&stock=${params.stock}`:""}`
+                : null,
+            nextLink: response.hasNextPage ? 
+                `${url}?page=${page+1}` + `${limit ? `&limit=${limit}`:""}` + `${params.sort ? `&sort=${params.sort}`:""}` + `${params.category ? `&category=${params.category}`:""}` + `${params.stock ? `&stock=${params.stock}`:""}`
+                : null,
+            payload: response.results,
+        })
     } catch (error) {
-        res.status(500).json({message: error})
+        console.log(error);
+        res.status(500).json({status: "error"})
     }
 })
 
 router.get("/:pid", async (req, res)=>{
     try {
-        const productId = parseInt(req.params.pid)  //? url params
+        const productId = req.params.pid  //? url params
         const product = await ProductsManager.getProductById(productId)
         if (!product){
             res.status(404).json({message: "no product found"})
@@ -35,6 +55,7 @@ router.get("/:pid", async (req, res)=>{
             res.status(200).json({product: product, message: "product found"})
         }
     } catch (error) {
+        console.log(error);
         res.status(500).json({message: error})
     }
 
@@ -64,37 +85,39 @@ router.post("/", async (req, res)=>{
         const newProduct = await ProductsManager.createProduct(productData)  //? request body
         res.status(200).json({product: newProduct, message: "product created"})
     } catch (error) {
+        console.log(error);
         res.status(500).json({message: error})
     }
 })
    
 router.put("/:pid", async (req, res)=>{    
     try {
-        const productId = parseInt(req.params.pid)  //? url params
-        const response = await ProductsManager.updateProduct(productId, req.body)
-        if (response===-1){
-            res.status(404).json({message: "product not found"})
+        const productId = req.params.pid  //? url params
+        const success = await ProductsManager.updateProduct(new Types.ObjectId(productId), req.body)
+        if (!success){
+            res.status(404).json({message: "update error"})
         }
         else {
             res.status(200).json({message: "product updated", product:response})
         }
     } catch (error) {
+        console.log(error);
         res.status(500).json({message: error})
     }
 })
 
 router.delete("/:pid", async (req, res)=>{
     try {
-        const productId = parseInt(req.params.pid)  //? url params
-        const response = await ProductsManager.deleteProduct(productId)
-        if (response===-1){
-            res.status(404).json({message: "product not found"})
+        const productId = req.params.pid  //? url params
+        const success = await ProductsManager.deleteProduct(new Types.ObjectId(productId))
+        if (!success){
+            res.status(404).json({message: "delete error"})
         }
         else {
-            console.log(response);
             res.status(200).json({message: "product deleted"})
         }
     } catch (error) {
+        console.log(error);
         res.status(500).json({message: error})
     }
 })
