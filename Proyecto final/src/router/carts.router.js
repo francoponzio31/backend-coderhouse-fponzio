@@ -29,15 +29,15 @@ router.get("/:cid", async (req, res)=>{
 
 router.put("/:cid", async (req, res)=>{
     try {
-
         const cartId = req.params.cid
-        const newProducts = req.body.products
+        const newProducts = {products: req.body.products}
         const success = await CartsManager.updateCart(cartId, newProducts)
         if (!success){
-            res.status(404).json({message: "update error"})
+            res.status(400).json({message: "update error"})
         }
         res.status(200).json({message: "cart updated"})
     } catch (error) {
+        console.log(error)
         res.status(500).json({message: error})
     }
 })
@@ -47,7 +47,7 @@ router.delete("/:cid", async (req, res)=>{
         const cartId = req.params.cid
         const success = await CartsManager.emptyCartProducts(cartId)
         if (!success){
-            res.status(404).json({message: "update error"})
+            res.status(400).json({message: "update error"})
         }
         res.status(200).json({message: "cart updated"})
     } catch (error) {
@@ -62,28 +62,28 @@ router.post("/:cid/product/:pid", async (req, res)=>{
 
         const product = await ProductsManager.getProductById(productId)
         if (!product){  // Se valida que el producto exista
-            res.status(404).json({message: "update error"})
+            res.status(400).json({message: "update error"})
         }
 
         const success = await CartsManager.addProductToCartById(cartId, productId)
         if (!success){
-            res.status(404).json({message: "update error"})
+            res.status(400).json({message: "update error"})
         }
 
         res.status(200).json({message: "cart updated"})
     } catch (error) {
+        console.log(error)
         res.status(500).json({message: error})
     }
 })
 
 router.delete("/:cid/product/:pid", async (req, res)=>{
     try {
-
         const cartId = req.params.cid
         const productId = req.params.pid
         const success = await CartsManager.deleteProductFromCartById(cartId, productId)
         if (!success){
-            res.status(404).json({message: "update error"})
+            res.status(400).json({message: "update error"})
         }
         else {
             res.status(200).json({message: "cart updated"})
@@ -95,17 +95,16 @@ router.delete("/:cid/product/:pid", async (req, res)=>{
 
 router.put("/:cid/product/:pid", async (req, res)=>{
     try {
-
         const cartId = req.params.cid
         const productId = req.params.pid
         const quantity = req.body.quantity
         if (!(typeof quantity === 'number' && quantity > 0)){
-            res.status(404).json({message: "quantity must be greater than 0"})
+            res.status(400).json({message: "quantity must be greater than 0"})
         }
 
         const success = await CartsManager.updateProductQuantityInCartById(cartId, productId, quantity)
         if (!success){
-            res.status(404).json({message: "update error"})
+            res.status(400).json({message: "update error"})
         }
         else {
             res.status(200).json({message: "cart updated"})

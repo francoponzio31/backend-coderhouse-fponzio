@@ -1,6 +1,5 @@
 import { Router } from "express"
 import { ProductsManager } from "../dao/manager/products.manager.js"
-import { Types } from "mongoose"
 
 
 const router = Router()
@@ -93,9 +92,9 @@ router.post("/", async (req, res)=>{
 router.put("/:pid", async (req, res)=>{    
     try {
         const productId = req.params.pid  //? url params
-        const success = await ProductsManager.updateProduct(new Types.ObjectId(productId), req.body)
+        const success = await ProductsManager.updateProduct(productId, req.body)
         if (!success){
-            res.status(404).json({message: "update error"})
+            res.status(400).json({message: "update error"})
         }
         else {
             res.status(200).json({message: "product updated", product:response})
@@ -109,9 +108,9 @@ router.put("/:pid", async (req, res)=>{
 router.delete("/:pid", async (req, res)=>{
     try {
         const productId = req.params.pid  //? url params
-        const success = await ProductsManager.deleteProduct(new Types.ObjectId(productId))
+        const success = await ProductsManager.deleteProduct(productId)
         if (!success){
-            res.status(404).json({message: "delete error"})
+            res.status(400).json({message: "delete error"})
         }
         else {
             res.status(200).json({message: "product deleted"})

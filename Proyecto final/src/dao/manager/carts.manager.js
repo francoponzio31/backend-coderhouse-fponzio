@@ -14,7 +14,7 @@ class CartManager{
 
     async createCart(){
         try {
-            return cartsModel.create()
+            return cartsModel.create({})
         } catch (error) {
             console.error(error)
             return error
@@ -23,7 +23,7 @@ class CartManager{
     
     async getCartById(cartId){
         try {
-            return cartsModel.findById(cartId)
+            return cartsModel.findById(cartId).populate({ path: "products.product" }).lean()
         } catch (error) {
             console.error(error)
             return error
@@ -59,11 +59,12 @@ class CartManager{
             if (!cart){
                 return updateSuccess
             }
-
-            const productIndex = cart.products.findIndex(product => product.id === productId)
+            console.log(cart.products);
+            // console.log(productId);
+            const productIndex = cart.products.findIndex(product => product.product._id.toString() === productId)
             if (productIndex===-1){
                 cart.products.push({
-                    id: productId,
+                    product: productId,
                     quantity: 1
                 })
             }
@@ -88,7 +89,7 @@ class CartManager{
                 return updateSuccess
             }
 
-            const productIndex = cart.products.findIndex(product => product.id === productId)
+            const productIndex = cart.products.findIndex(product => product.product._id.toString() === productId)
             if (productIndex===-1){
                 return updateSuccess
             }
@@ -113,7 +114,7 @@ class CartManager{
                 return updateSuccess
             }
 
-            const productIndex = cart.products.findIndex(product => product.id === productId)
+            const productIndex = cart.products.findIndex(product => product.product._id.toString() === productId)
             if (productIndex!==-1){
                 cart.products.splice(productIndex, 1)
             }

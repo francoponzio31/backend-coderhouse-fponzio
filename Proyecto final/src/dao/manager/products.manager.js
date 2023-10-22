@@ -5,7 +5,7 @@ class ProductManager{
 
     async getProducts(page=1, limit=10, sort={}, query={}, ){
         try {       
-            const options = { page, limit, sort }
+            const options = { page, limit, sort, lean: true}
             const result = await productsModel.paginate(query, options)
             return {
                 results: result.docs,
