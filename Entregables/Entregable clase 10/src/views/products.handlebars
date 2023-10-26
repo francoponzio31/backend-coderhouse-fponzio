@@ -1,0 +1,47 @@
+<h2>Welcome, {{userData.first_name}}</h2>
+
+<h1>Products</h1>
+<ul>
+  {{#each products}}
+    <li>
+        <span> <b>{{this.title}}</b> </span>
+        - <span> Price: ${{this.price}} </span>
+        - <span> Stock: {{this.stock}} </span>
+        - <span> Category: {{this.category}} </span>
+        - <button data-product-id={{this._id}} data-cart-id="6534a7ad0e0c3cb46b132cd7" onclick="addProductToCart(this)">Add to cart</button>
+    </li>
+  {{/each}}
+</ul>
+
+<ul>
+  Page
+  {{#each pages}}
+    <a href="http://localhost:8080/views/products?page={{this}}"><button>{{this}}</button></a>
+  {{/each}}
+</ul>
+
+<a href="http://localhost:8080/views/carts/6534a7ad0e0c3cb46b132cd7"><button>Go to cart</button></a>
+
+<script>
+  async function addProductToCart(element){
+    try{
+      const productId = element.getAttribute("data-product-id")
+      const cartId = element.getAttribute("data-cart-id")
+      const response = await fetch(`/api/carts/${cartId}/product/${productId}`, {
+        method: "post"
+      })
+      
+      if(response.ok){
+        alert("product added to cart")
+      }
+      else{
+        alert("error when adding the to cart")
+      }
+      const data = await response.json()
+      console.log(data)
+    }
+    catch (error){
+      console.log(error)
+    }
+  }
+</script>
