@@ -22,7 +22,11 @@ const usersSchema = new Schema({
     password:{
         type: String,
         required: true
-    },   
+    },
+    from_github:{
+        type: Boolean,
+        default: false
+    }
 })
 
 export const usersModel = model("users", usersSchema)
