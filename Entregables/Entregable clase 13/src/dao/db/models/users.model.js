@@ -23,6 +23,15 @@ const usersSchema = new Schema({
         type: String,
         required: true
     },
+    cart:{
+        type: Schema.Types.ObjectId,
+        ref:"carts",
+        required: true
+    },
+    role:{
+        type: String,
+        default:"user"
+    },
     from_github:{
         type: Boolean,
         default: false

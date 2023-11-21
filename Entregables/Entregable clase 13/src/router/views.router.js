@@ -37,9 +37,9 @@ router.get("/products", loginRequired, async (req, res) => {
         const page = parseInt(req.query.page) || 1
         const response = await ProductsManager.getProducts(page)
         const products = response.results
-        const pagesArray = Array.from({ length: response.pages }, (_, index) => index + 1)
+        const pagesArray = Array.from({ length:response.pages }, (_, index) => index + 1)
         const userData = req.user
-        res.render("products", {products: products, pages:pagesArray, userData})
+        res.render("products", {products:products, pages:pagesArray, userData})
     } catch (error) {
         res.status(500).json({message: error})
     }
