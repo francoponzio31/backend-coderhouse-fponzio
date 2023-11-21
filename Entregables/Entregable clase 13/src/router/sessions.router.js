@@ -5,6 +5,15 @@ import {loginRequired} from "../middlewares/auth.middleware.js"
 
 const router = Router()
 
+router.get("/current", loginRequired, async (req, res)=>{
+    try {
+        res.status(200).json({user: req.user})
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message: error})
+    }
+})
+
 router.post("/login", passport.authenticate("login", {failWithError: true}),
     function(req, res, next) {
         // Handle success

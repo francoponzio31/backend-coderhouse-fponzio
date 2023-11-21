@@ -58,10 +58,11 @@ class CartManager{
         try {
             let updateSuccess = false
 
-            const cart = this.getCartById(cartId)
+            const cart = await this.getCartById(cartId)
             if (!cart){
                 return updateSuccess
             }
+            console.log(cart);
             const productIndex = cart.products.findIndex(product => product.product._id.toString() === productId)
             if (productIndex===-1){
                 cart.products.push({
