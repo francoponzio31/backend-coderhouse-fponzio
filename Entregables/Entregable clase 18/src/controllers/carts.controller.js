@@ -1,6 +1,7 @@
 import cartsService from "../services/carts.service.js"
 import { errorMessages, successMessages, statusMessages } from "../utils/responses.js"
 import customError from "../utils/customError.js"
+import { logger } from "../utils/winston.js"
 
 
 class CartsController{
@@ -36,7 +37,7 @@ class CartsController{
             }
             return res.status(200).json({message:successMessages.UPDATED, status:statusMessages.SUCCESS})
         } catch (error) {
-            console.log(error)
+            logger.error(error)
             customError.throw(errorMessages.SERVER_ERROR, 500)
         } 
     }
@@ -66,7 +67,7 @@ class CartsController{
     
             return res.status(200).json({message:successMessages.UPDATED, status:statusMessages.SUCCESS})
         } catch (error) {
-            console.log(error)
+            logger.error(error)
             customError.throw(errorMessages.SERVER_ERROR, 500)
         }
     }

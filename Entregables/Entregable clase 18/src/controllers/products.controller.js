@@ -2,6 +2,7 @@ import productsService from "../services/products.service.js"
 import { generateProducts } from "../utils/faker.js"
 import { errorMessages, successMessages, statusMessages } from "../utils/responses.js"
 import customError from "../utils/customError.js"
+import { logger } from "../utils/winston.js"
 
 
 class ProductsController{
@@ -12,14 +13,14 @@ class ProductsController{
             const limit = parseInt(params.limit) || 10
             const sort  = params.sort === "asc" ? {"price":1} : params.sort === "desc" ? {"price":-1} : {}
             const query  = {}
-            if (params.category) query.category = params.category;
-            if (params.stock) query.stock = params.stock;
+            if (params.category) query.category = params.category
+            if (params.stock) query.stock = params.stock
     
             const baseUrl = `${req.protocol}://${req.get('host')}${req.baseUrl}`
             const response = await productsService.getProducts(baseUrl, page, limit, sort, query)
             return res.status(200).json({message:successMessages.FOUNDED, status:statusMessages.SUCCESS, ...response })
         } catch (error) {
-            console.log(error);
+            logger.error(error)
             customError.throw(errorMessages.SERVER_ERROR, 500)
         }
     }
@@ -35,7 +36,7 @@ class ProductsController{
                 return res.status(200).json({product: product, message:successMessages.FOUNDED, status:statusMessages.SUCCESS})
             }
         } catch (error) {
-            console.log(error);
+            logger.error(error)
             customError.throw(errorMessages.SERVER_ERROR, 500)
         }
     }
@@ -45,7 +46,7 @@ class ProductsController{
             const newProduct = await productsService.createProduct({...req.body, status: true})  //? request body
             return res.status(200).json({product: newProduct, message:successMessages.CREATED, status:statusMessages.SUCCESS})
         } catch (error) {
-            console.log(error)
+            logger.error(error)
             customError.throw(errorMessages.SERVER_ERROR, 500)
         }
     }
@@ -61,7 +62,7 @@ class ProductsController{
                 return res.status(200).json({product: response, message:successMessages.UPDATED, status:statusMessages.SUCCESS})
             }
         } catch (error) {
-            console.log(error);
+            logger.error(error)
             customError.throw(errorMessages.SERVER_ERROR, 500)
         }
     }
@@ -77,7 +78,7 @@ class ProductsController{
                 return res.status(200).json({message:successMessages.DELETED, status:statusMessages.SUCCESS})
             }
         } catch (error) {
-            console.log(error);
+            logger.error(error)
             customError.throw(errorMessages.SERVER_ERROR, 500)
         }
     }
@@ -88,7 +89,7 @@ class ProductsController{
             const products = generateProducts(quantity)
             return res.status(200).json({products:products, status:statusMessages.SUCCESS})
         } catch (error) {
-            console.log(error);
+            logger.error(error)
             customError.throw(errorMessages.SERVER_ERROR, 500)
         }
     }

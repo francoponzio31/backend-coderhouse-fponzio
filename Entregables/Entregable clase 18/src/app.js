@@ -1,6 +1,6 @@
 import express from "express"
 import session from "express-session"
-import { engine } from 'express-handlebars';
+import { engine } from 'express-handlebars'
 import mongoStore from "connect-mongo"
 import config from "./config/config.js"
 import { __dirname } from "./utils/utils.js"
@@ -12,6 +12,7 @@ import viewsRouter from "./router/views.router.js"
 import passport from "passport"
 import "./utils/passport.js"
 import { errorMidleware } from "./middlewares/error.middleware.js"
+import { logger } from "./utils/winston.js"
 
 
 const app = express()
@@ -54,8 +55,20 @@ app.use("/api/sessions", sessionRouter)
 
 const PORT  = config.port
 
+
+app.get("/loggerTest", (req, res) => {
+    logger.fatal("Este es un mensaje de error fatal")
+    logger.error("Este es un mensaje de error")
+    logger.warning("Cuidado, esto es una advertencia")
+    logger.info("Información importante")
+    logger.http("Este es un mensaje HTTP")
+    logger.debug("Este es un mensaje de depuración")
+    res.send("Test de logging")
+})
+
+
 app.listen(
     PORT, () => {
-        console.log(`App listening on port ${PORT}`)
+        logger.info(`App listening on port ${PORT}`)
     }
 )

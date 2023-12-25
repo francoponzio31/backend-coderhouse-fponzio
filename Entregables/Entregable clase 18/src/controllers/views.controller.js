@@ -3,6 +3,7 @@ import productsService from "../services/products.service.js"
 import cartsService from "../services/carts.service.js"
 import { errorMessages } from "../utils/responses.js"
 import customError from "../utils/customError.js"
+import { logger } from "../utils/winston.js"
 
 
 class ViewsController{
@@ -50,7 +51,7 @@ class ViewsController{
             const cart = await cartsService.getCartById(cartId)
             return res.render("cartProducts", {cartId: cartId, products: cart.products})
         } catch (error) {
-            console.log(error)
+            logger.error(error)
             customError.throw(errorMessages.SERVER_ERROR, 500)
         }
     }
