@@ -17,4 +17,6 @@ router.get("/products", loginRequired, roleRequired("user"), controller.getProdu
 
 router.get("/carts/:cid", loginRequired, roleRequired("user"), controller.getCartById)
 
+router.get("/restorePassword/:token", loginRequired, controller.restorePassword)
+
 export default router

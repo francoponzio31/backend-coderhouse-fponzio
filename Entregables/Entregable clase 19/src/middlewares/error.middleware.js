@@ -1,6 +1,8 @@
-import { statusMessages } from "../utils/responses.js"
+import { statusMessages, errorMessages } from "../utils/responses.js"
+import { logger } from "../utils/winston.js"
 
 
 export function errorMidleware(error, req, res, next){
-    return res.status(error.statusCode).json({success:false, status:statusMessages.ERROR, message:error.message})
+    logger.error(error.message)
+    return res.send({success:false, status:statusMessages.ERROR, message:error.message || errorMessages.SERVER_ERROR})
 }

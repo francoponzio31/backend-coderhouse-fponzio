@@ -8,6 +8,7 @@ import { connectToDb } from "./config/dbConfig.js"
 import productsRouter from "./router/products.router.js"
 import cartsRouter from "./router/carts.router.js"
 import sessionRouter from "./router/sessions.router.js"
+import usersRouter from "./router/users.router.js"
 import viewsRouter from "./router/views.router.js"
 import passport from "passport"
 import "./utils/passport.js"
@@ -21,7 +22,7 @@ connectToDb()
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(express.static(__dirname + "/public"))
-app.use(errorMidleware)
+
 
 // session mongo
 app.use(
@@ -52,20 +53,11 @@ app.use("/", viewsRouter)
 app.use("/api/products", productsRouter)
 app.use("/api/carts", cartsRouter)
 app.use("/api/sessions", sessionRouter)
+app.use("/api/users", usersRouter)
+
+app.use(errorMidleware)
 
 const PORT  = config.port
-
-
-app.get("/loggerTest", (req, res) => {
-    logger.fatal("Este es un mensaje de error fatal")
-    logger.error("Este es un mensaje de error")
-    logger.warning("Cuidado, esto es una advertencia")
-    logger.info("Información importante")
-    logger.http("Este es un mensaje HTTP")
-    logger.debug("Este es un mensaje de depuración")
-    res.send("Test de logging")
-})
-
 
 app.listen(
     PORT, () => {

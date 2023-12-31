@@ -40,6 +40,9 @@ class ProductsService{
         return productsDao.deleteOne(productId)
     }
 
+    async updateProduct(productId, newData){
+        return productsDao.updateOne(productId, newData)
+    }
 }
 
 const productsService = new ProductsService()
