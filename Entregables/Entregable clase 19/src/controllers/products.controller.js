@@ -40,7 +40,7 @@ class ProductsController{
 
     async createProduct(req, res, next){
         try {           
-            const newProduct = await productsService.createProduct({...req.body, status: true})  //? request body
+            const newProduct = await productsService.createProduct({...req.body, owner:req.user.email, status: true})  //? request body
             return res.status(200).json({product: newProduct, message:successMessages.CREATED, status:statusMessages.SUCCESS})
         } catch (error) {
             next(error)

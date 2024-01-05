@@ -13,7 +13,7 @@ router.put("/:cid", loginRequired, controller.updateCart)
 
 router.delete("/:cid", loginRequired, controller.emptyCartProducts)
 
-router.post("/:cid/product/:pid", loginRequired, roleRequired("user"), controller.addProductToCartById)
+router.post("/:cid/product/:pid", loginRequired, roleRequired(["user", "premium"]), controller.addProductToCartById)
 
 router.delete("/:cid/product/:pid", loginRequired, controller.deleteProductFromCartById)
 
