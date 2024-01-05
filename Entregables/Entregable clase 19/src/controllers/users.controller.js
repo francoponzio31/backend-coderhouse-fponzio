@@ -29,6 +29,16 @@ class UsersController{
         }     
     }
 
+    async togglePremiumRole(req, res, next) {
+        try {
+            const userId = req.params.uid
+            usersService.togglePremiumRole(userId)
+            return res.status(200).json({message:successMessages.UPDATED, status:statusMessages.SUCCESS})
+        } catch (error) {
+            next(error)
+        }     
+    }
+
 }
 
 const usersController = new UsersController()

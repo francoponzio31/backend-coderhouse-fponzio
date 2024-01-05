@@ -15,13 +15,13 @@ router.get("/:pid", loginRequired, controller.getProductById)
 router.post(
     "/",
     loginRequired,
-    roleRequired("admin"),
+    roleRequired(["admin", "premium"]),
     validateBodyParams([{"title":"string"}, {"description":"string"}, {"code":"string"}, {"price":"number"}, {"stock":"number"}, {"category":"string"}]),
     controller.createProduct
 )
 
-router.put("/:pid", loginRequired, roleRequired("admin"), controller.updateProduct)
+router.put("/:pid", loginRequired, roleRequired(["admin", "premium"]), controller.updateProduct)
 
-router.delete("/:pid", loginRequired, roleRequired("admin"), controller.deleteProduct)
+router.delete("/:pid", loginRequired, roleRequired(["admin", "premium"]), controller.deleteProduct)
 
 export default router

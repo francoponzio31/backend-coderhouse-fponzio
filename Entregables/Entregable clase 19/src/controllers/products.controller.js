@@ -50,7 +50,8 @@ class ProductsController{
     async updateProduct(req, res, next){
         try {
             const productId = req.params.pid  //? url params
-            const success = await productsService.updateProduct(productId, req.body)
+            const user = req.user
+            const success = await productsService.updateProduct(productId, req.body, user)
             if (!success){
                 customError.throw(errorMessages.NOT_UPDATED, 400)
             }
@@ -65,7 +66,8 @@ class ProductsController{
     async deleteProduct(req, res, next){
         try {
             const productId = req.params.pid  //? url params
-            const success = await productsService.deleteProduct(productId)
+            const user = req.user
+            const success = await productsService.deleteProduct(productId, user)
             if (!success){
                 customError.throw(errorMessages.NOT_DELETED, 400)
             }

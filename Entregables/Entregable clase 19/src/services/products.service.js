@@ -36,11 +36,18 @@ class ProductsService{
         return productsDao.createOne(productData)
     }
 
-    async deleteProduct(productId){
+    async deleteProduct(productId, user){
+        const product = productsDao.getById(productId)
+        if (user.role === "premium" && product.owner !== user.email){
+            return false
+        }
         return productsDao.deleteOne(productId)
     }
 
-    async updateProduct(productId, newData){
+    async updateProduct(productId, newData, user){
+        if (user.role === "premium" && product.owner !== user.email){
+            return false
+        }
         return productsDao.updateOne(productId, newData)
     }
 }

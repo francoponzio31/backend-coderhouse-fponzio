@@ -59,8 +59,9 @@ class CartsController{
         try {
             const cartId = req.params.cid
             const productId = req.params.pid
+            const user = req.user
 
-            const success = await cartsService.addProductToCartById(cartId, productId)
+            const success = await cartsService.addProductToCartById(cartId, productId, user)
             if (!success){
                 customError.throw(errorMessages.NOT_UPDATED, 400)
             }

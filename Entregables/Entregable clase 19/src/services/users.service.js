@@ -53,6 +53,21 @@ class UsersService{
         `
         sendMail(user.email, "eCommerce restore password", mailContent)
     }
+
+    async togglePremiumRole(userId){
+        const user = await usersDao.getById(userId, false)
+        if (user.role === "user"){
+            user.role = "premium"
+            user.save()
+            return true
+        }
+        else if (user.role === "premium"){
+            user.role = "user"
+            user.save()
+            return true
+        }
+
+    }
 }
 
 const usersService = new UsersService()
