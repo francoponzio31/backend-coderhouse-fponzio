@@ -1,0 +1,30 @@
+<span> <b>Id: </b> {{user._id}}</span><br>
+<span> <b>First Name: </b> {{user.first_name}}</span><br>
+<span> <b>Last Name: </b> {{user.last_name}}</span><br>
+<span> <b>Email: </b> {{user.email}}</span><br>
+<span> <b>Age: </b> {{user.age}}</span><br>
+<span> <b>Role: </b> {{user.role}}</span>
+
+<hr>
+
+<button onclick="sendRestorePasswordEmail('{{user._id}}')">Restore password</button>
+
+
+<script>
+  async function sendRestorePasswordEmail(userId){
+    try{
+      const response = await fetch(`/api/users/password/restore/mail/${userId}`)
+      
+      if(response.ok){
+        alert("password restore email sent")
+      }
+      else{
+        alert("error to send the password restore mail")
+      }
+      const data = await response.json()
+    }
+    catch (error){
+      console.log(error)
+    }
+  }
+</script>
