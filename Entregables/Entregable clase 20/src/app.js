@@ -14,6 +14,8 @@ import passport from "passport"
 import "./utils/passport.js"
 import { errorMidleware } from "./middlewares/error.middleware.js"
 import { logger } from "./utils/winston.js"
+import swaggerUi from "swagger-ui-express"
+import { swaggerSetup } from "./utils/swaggerSpecs.js"
 
 
 const app = express()
@@ -54,6 +56,7 @@ app.use("/api/products", productsRouter)
 app.use("/api/carts", cartsRouter)
 app.use("/api/sessions", sessionRouter)
 app.use("/api/users", usersRouter)
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSetup))
 
 app.use(errorMidleware)
 
