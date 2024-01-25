@@ -5,6 +5,8 @@ import controller from "../controllers/carts.controller.js"
 
 const router = Router()
 
+router.post("/", loginRequired, controller.createCart)
+
 router.get("/:cid", loginRequired, controller.getCartById)
 
 router.put("/:cid", loginRequired, controller.updateCart)

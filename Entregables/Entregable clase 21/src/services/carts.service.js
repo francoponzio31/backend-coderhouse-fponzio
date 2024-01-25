@@ -18,6 +18,10 @@ class CartsService{
         return cartsDao.updateOne(cartId, newProducts)
     }
 
+    async deleteCart(cartId){
+        return cartsDao.deleteOne(cartId)
+    }
+
     async emptyCartProducts(cartId){
         return cartsDao.updateOne(cartId, {products:[]})
     }

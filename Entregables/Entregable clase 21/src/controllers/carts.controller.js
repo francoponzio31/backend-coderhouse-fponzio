@@ -41,6 +41,20 @@ class CartsController{
             next(error)
         } 
     }
+
+    async deleteCart(req, res, next){
+        try {
+            const cartId = req.params.cid
+            const success = await cartsService.deleteCart(cartId)
+            if (!success){
+                customError.throw(errorMessages.NOT_DELETED, 400)
+            }
+            return res.status(200).json({message:successMessages.DELETED, status:statusMessages.SUCCESS})
+        } catch (error) {
+            logger.error(error)
+            next(error)
+        } 
+    }
     
     async emptyCartProducts(req, res, next){
         try {
