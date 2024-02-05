@@ -3,6 +3,7 @@ export const successMessages = {
     FOUNDED: "Successful search",
     UPDATED: "Successful update",
     DELETED: "Successful delete",
+    UPLOADED: "Successful upload",
     PURCHASED: "Successful purchase",
     MAIL_SENT: "Mail sent"
 }
@@ -12,6 +13,7 @@ export const errorMessages = {
     NOT_CREATED: "Create error",
     NOT_UPDATED: "Update error",
     NOT_DELETED: "Delete error",
+    NOT_UPLOADED: "Upload error",
     SERVER_ERROR: "Execution error",
     NOT_PURCHASED: "Purchase error",
     MAIL_NOT_SENT: "Mail not sent",

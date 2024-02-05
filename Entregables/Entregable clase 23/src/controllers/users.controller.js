@@ -32,8 +32,30 @@ class UsersController{
     async togglePremiumRole(req, res, next) {
         try {
             const userId = req.params.uid
-            usersService.togglePremiumRole(userId)
-            return res.status(200).json({message:successMessages.UPDATED, status:statusMessages.SUCCESS})
+            const success = await usersService.togglePremiumRole(userId)
+            if (success){
+                return res.status(200).json({message:successMessages.UPDATED, status:statusMessages.SUCCESS})
+            }
+            else {
+                return res.status(403).json({message:errorMessages.NOT_UPDATED, status:statusMessages.ERROR})
+            }
+        } catch (error) {
+            next(error)
+        }     
+    }
+
+    async uploadDocument(req, res, next) {
+        try {
+            await usersService.appendDocument(
+                req.params.uid, 
+                {
+                    name: req.file.filename,
+                    type: req.body.file_type === "document" ? req.body.document_type  : req.body.file_type,
+                    reference: `/uploads/${req.body.file_type}/${req.file.filename}`
+                }
+            )
+
+            return res.status(200).json({message:successMessages.UPLOADED, status:statusMessages.SUCCESS})
         } catch (error) {
             next(error)
         }     

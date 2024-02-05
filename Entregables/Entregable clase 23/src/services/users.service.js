@@ -57,9 +57,14 @@ class UsersService{
     async togglePremiumRole(userId){
         const user = await usersDao.getById(userId, false)
         if (user.role === "user"){
-            user.role = "premium"
-            user.save()
-            return true
+            const requiredDocs = ["proof_account", "proof_adress", "identification"]
+            const requiredDocsUploaded = requiredDocs.every(type => user.documents.some(doc => doc.type === type))
+            if (requiredDocsUploaded){
+                user.role = "premium"
+                user.save()
+                return true
+            }
+            return false
         }
         else if (user.role === "premium"){
             user.role = "user"
@@ -67,6 +72,12 @@ class UsersService{
             return true
         }
 
+    }
+
+    async appendDocument(userId, document){
+        const user = await usersDao.getById(userId, false)
+        user.documents.push(document)
+        user.save()
     }
 }
 

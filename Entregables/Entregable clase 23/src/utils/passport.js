@@ -21,7 +21,8 @@ passport.use(
                     last_name: req.body.last_name,
                     email: req.body.email,
                     age: req.body.age,
-                    password: await hashData(password)
+                    password: await hashData(password),
+                    last_connection: { date: Date.now(), action: "signup"}
                 }
                 const createdUser = await usersService.createUser(newUser)
                 return done(null, createdUser)
@@ -45,6 +46,7 @@ passport.use(
                 if (! await compareHashedData(password, user.password)){
                     return done(null, false)
                 }
+                await usersService.updateUser(user._id, {last_connection: { date: Date.now(), action: "login"}})
                 return done(null, user)
             } catch (error) {
                 return done(error)
@@ -69,6 +71,7 @@ passport.use(
     // LOGIN
     if(user){
         if(user.from_github){
+            await usersService.updateUser(user._id, {last_connection: { date: Date.now(), action: "login"}})
             return done(null, user)
         }
         else{
@@ -80,11 +83,10 @@ passport.use(
     else{
         const newUser = {
             first_name: profile.username,
-            last_name: "-",
             email: profile.emails[0].value,
-            age: 0,
             password: "-",
-            from_github: true
+            from_github: true,
+            last_connection: { date: Date.now(), action: "signup"}
         }
         const createdUser = await usersService.createUser(newUser)
         return done(null, createdUser)

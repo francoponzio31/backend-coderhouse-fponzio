@@ -1,5 +1,6 @@
 import { successMessages, statusMessages } from "../utils/responses.js"
 import { logger } from "../utils/winston.js"
+import usersService from "../services/users.service.js"
 
 
 class SessionsController{
@@ -15,6 +16,7 @@ class SessionsController{
 
     async logout(req, res, next){
         try {
+            await usersService.updateUser(req.user._id, {last_connection: { date: Date.now(), action: "logout"}})
             req.logout((error) => {
                 if (error) {
                     logger.error(error)
