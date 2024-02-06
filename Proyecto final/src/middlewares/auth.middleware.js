@@ -10,13 +10,13 @@ export function loginRequired(req, res, next){
     }
 }
 
-export function roleRequired(role){
+export function roleRequired(...requiredRoles){
     return (req, res, next) => {
-        if(req.user.role === role){
+        if (requiredRoles.includes(req.user.role)){
             next()
         }
         else{
-            customError.throw(`The role ${role} is required`, 403)
+            customError.throw("Unauthorized resource", 403)
         }
     }
 }

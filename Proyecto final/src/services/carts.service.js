@@ -18,15 +18,24 @@ class CartsService{
         return cartsDao.updateOne(cartId, newProducts)
     }
 
+    async deleteCart(cartId){
+        return cartsDao.deleteOne(cartId)
+    }
+
     async emptyCartProducts(cartId){
         return cartsDao.updateOne(cartId, {products:[]})
     }
 
-    async addProductToCartById(cartId, productId){
-        let updateSuccess = false
+    async addProductToCartById(cartId, productId, user){
 
+        let updateSuccess = false
+        
         const product = await productsDao.getById(productId)
         if (!product){  // Se valida que el producto exista
+            return updateSuccess
+        }
+        
+        if (user.role === "premium" && product.owner === user.email){
             return updateSuccess
         }
 

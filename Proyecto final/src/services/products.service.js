@@ -1,4 +1,6 @@
 import productsDao from "../dao/products.mongo.js"
+import usersService from "./users.service.js"
+import { sendMail } from "../utils/nodemailer.js"
 
 
 class ProductsService{
@@ -36,10 +38,29 @@ class ProductsService{
         return productsDao.createOne(productData)
     }
 
-    async deleteProduct(productId){
+    async deleteProduct(productId, user){
+        const product = productsDao.getById(productId)
+        if (user.role === "premium" && product.owner !== user.email){
+            return false
+        }
+        const productOwner = await usersService.getUserByEmail(product.owner)
+        if (productOwner.role === "premium"){
+            const mailContent = `
+                <h2>Product: ${product.title}</h2>
+                your product has been removed by ${user.email}
+            `
+            sendMail(productOwner.email, "a product of yours has been eliminated", mailContent)
+        }
+
         return productsDao.deleteOne(productId)
     }
 
+    async updateProduct(productId, newData, user){
+        if (user.role === "premium" && product.owner !== user.email){
+            return false
+        }
+        return productsDao.updateOne(productId, newData)
+    }
 }
 
 const productsService = new ProductsService()

@@ -1,36 +1,36 @@
-import { errorMessages, successMessages, statusMessages } from "../utils/responses.js"
-import customError from "../utils/customError.js"
+import { successMessages, statusMessages } from "../utils/responses.js"
+import { logger } from "../utils/winston.js"
+import usersService from "../services/users.service.js"
 
 
 class SessionsController{
-    async getCurrentUser(req, res){
+    async getCurrentUser(req, res, next){
         try {
             const user = req.user
             delete user.password
             return res.status(200).json({user: user, message:successMessages.FOUNDED, status:statusMessages.SUCCESS})
         } catch (error) {
-            console.log(error);
-            customError.throw(errorMessages.SERVER_ERROR, 500)
+            next(error)
         }
     }
 
-    async logout(req, res){
+    async logout(req, res, next){
         try {
+            await usersService.updateUser(req.user._id, {last_connection: { date: Date.now(), action: "logout"}})
             req.logout((error) => {
                 if (error) {
-                    console.error(error)
+                    logger.error(error)
                 }
                 req.session.destroy((error) => {
                     if (error) {
-                        console.error(error)
+                        logger.error(error)
                     } else {
                         return res.redirect("/login")
                     }
                 })
             })
         } catch (error) {
-            console.error(error)
-            customError.throw(errorMessages.SERVER_ERROR, 500)
+            next(error)
         }
     }
 

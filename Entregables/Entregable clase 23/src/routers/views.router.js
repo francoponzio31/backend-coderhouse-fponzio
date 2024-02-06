@@ -13,9 +13,9 @@ router.get("/signup", controller.signup)
 
 router.get("/profile", loginRequired, controller.getProfile)
 
-router.get("/products", loginRequired, roleRequired("user"), controller.getProducts)
+router.get("/products", loginRequired, roleRequired(["user", "premium"]), controller.getProducts)
 
-router.get("/carts/:cid", loginRequired, roleRequired("user"), controller.getCartById)
+router.get("/carts/:cid", loginRequired, roleRequired(["user", "premium"]), controller.getCartById)
 
 router.get("/restorePassword/:token", loginRequired, controller.restorePassword)
 
